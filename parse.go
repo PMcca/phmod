@@ -1,8 +1,21 @@
 package main
 
-import "github.com/PMcca/phmod/chmodparse"
+import (
+	"fmt"
+	"regexp"
 
-func parse(arg []string) {
+	"github.com/PMcca/phmod/chmodparse"
+	"github.com/urfave/cli"
+)
+
+var regexNum = regexp.MustCompile("^[0124]?\\d{3}$")
+
+func parse(ctx *cli.Context) error {
 	var parser chmodparse.Parser
-	return
+	parser = chmodparse.NewNumParser()
+	parser.Parse()
+
+	fmt.Println(regexNum.MatchString("1234"))
+
+	return nil
 }

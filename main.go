@@ -28,6 +28,8 @@ func cliInit() *cli.App {
 	// 		Usage: "",
 	// 	},
 	// }
+
+	app.Action = parse
 	return app
 }
 
