@@ -1,7 +1,7 @@
 package chmodparse
 
 type Parser interface {
-	Parse() string
+	Parse(s string) string
 }
 
 type NumParser struct {
@@ -9,10 +9,10 @@ type NumParser struct {
 type CharParser struct {
 }
 
-func (p NumParser) Parse() string {
-	return "123"
+func (p NumParser) Parse(s string) string {
+	return "IMPLEMENT NUMPARSER"
 }
 
-func NewNumParser() *NumParser {
-	return &NumParser{}
+func (p CharParser) Parse(s string) string {
+	return "IMPLEMENT CHARPARSER"
 }

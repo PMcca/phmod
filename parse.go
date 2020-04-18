@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 
@@ -8,14 +9,27 @@ import (
 	"github.com/urfave/cli"
 )
 
-var regexNum = regexp.MustCompile("^[0124]?\\d{3}$")
+var regexNum = regexp.MustCompile("^[0-7]?[0-7]{3}$") // 3 or 4 digits
+var regexChar = regexp.MustCompile("^a$")             //TODO
+
+var parser chmodparse.Parser
 
 func parse(ctx *cli.Context) error {
-	var parser chmodparse.Parser
-	parser = chmodparse.NewNumParser()
-	parser.Parse()
+	if len(ctx.Args()) != 1 {
+		return errors.New("Invalid number of arguments")
+	}
 
-	fmt.Println(regexNum.MatchString("1234"))
+	arg := ctx.Args().First()
+	switch {
+	case regexNum.MatchString(arg):
+		parser = chmodparse.NumParser{}
+	case regexChar.MatchString(arg):
+		parser = chmodparse.CharParser{}
+	default:
+		return errors.New("Invalid argument")
+	}
+
+	fmt.Println(parser.Parse(arg))
 
 	return nil
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/urfave/cli"
@@ -20,7 +20,8 @@ func cliInit() *cli.App {
 
 {{if .VisibleFlags}}Options:
 {{range $index, $option := .VisibleFlags}}{{if $index}}
-{{end}}{{$option}}{{end}}{{end}}`
+{{end}}{{$option}}{{end}}{{end}}
+`
 
 	// app.Flags = []cli.Flag{
 	// 	cli.BoolFlag{
@@ -36,6 +37,7 @@ func cliInit() *cli.App {
 func main() {
 	app := cliInit()
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal("ERROR - ", err)
+		fmt.Println("Error - ", err, "\nUse -h for usage info")
+		os.Exit(1)
 	}
 }
