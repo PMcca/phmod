@@ -8,20 +8,21 @@ import (
 
 type Parser interface {
 	Parse(arg string) (string, error)
+	ParseVerbose(arg string) (string, error)
 }
 
-type NumParser struct {
+type numParser struct {
 	specialMode rune
 	mode        string
 }
 type CharParser struct {
 }
 
-func NewNumParser(arg string) NumParser {
-	p := NumParser{}
+func NewNumParser(arg string) numParser {
+	p := numParser{}
 	if len(arg) == 4 {
-		p.specialMode = arg[0]
-		p.mode = strings.arg[1:3]
+		p.specialMode = rune(arg[0])
+		p.mode = string(arg[1:])
 	} else {
 		p.mode = arg
 	}
@@ -39,7 +40,8 @@ var modes = map[string]string{
 	"7": "rwx",
 }
 
-func (p NumParser) Parse(arg string) (string, error) {
+// NumParser
+func (p numParser) Parse(arg string) (string, error) {
 	builder := strings.Builder{}
 
 	if p.specialMode != 0 {
@@ -47,11 +49,14 @@ func (p NumParser) Parse(arg string) (string, error) {
 		//TODO implement special modes
 	}
 
-	builder.WriteString(p.mode)
-
 	return builder.String(), nil
 }
 
+func (p numParser) ParseVerbose(arg string) (string, error) {
+	return "", nil
+}
+
+// CharParser
 func (p CharParser) Parse(arg string) (string, error) {
 	a, err := reverseMap(modes, arg)
 	if err != nil {
@@ -60,6 +65,10 @@ func (p CharParser) Parse(arg string) (string, error) {
 	fmt.Printf("Given %s, we get %s", arg, a)
 
 	return "IMPLEMENT CHARPARSER", nil
+}
+
+func (p CharParser) ParseVerbose(arg string) (string, error) {
+	return "", nil
 }
 
 // Given rwx as val, will return 7 as k

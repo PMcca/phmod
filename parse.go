@@ -22,7 +22,7 @@ func parse(ctx *cli.Context) error {
 	arg := ctx.Args().First()
 	switch {
 	case regexNum.MatchString(arg):
-		parser = chmodparse.NumParser{}
+		parser = chmodparse.NewNumParser(arg)
 	case regexChar.MatchString(arg):
 		parser = chmodparse.CharParser{}
 	default:

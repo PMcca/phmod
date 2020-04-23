@@ -14,6 +14,14 @@ func cliInit() *cli.App {
 	app.Description = "Translator for chmod strings, both digit and char representations."
 	app.Usage = "phmod [OPTION] <args>"
 	app.Version = "1.0.0"
+
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name:  "long, l",
+			Usage: "Prints the result in verbose, human-readable format.",
+		},
+	}
+
 	cli.AppHelpTemplate = `{{.Name}}{{if .Description}} - {{.Description}}{{end}}
 
 {{if .Usage}}Usage: {{.Usage}}{{end}}
@@ -22,13 +30,6 @@ func cliInit() *cli.App {
 {{range $index, $option := .VisibleFlags}}{{if $index}}
 {{end}}{{$option}}{{end}}{{end}}
 `
-
-	// app.Flags = []cli.Flag{
-	// 	cli.BoolFlag{
-	// 		Name:  "verbose, v",
-	// 		Usage: "",
-	// 	},
-	// }
 
 	app.Action = parse
 	return app
