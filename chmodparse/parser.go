@@ -29,30 +29,33 @@ func NewNumParser(arg string) numParser {
 	return p
 }
 
-var modes = map[string]string{
-	"0": "---",
-	"1": "--x",
-	"2": "-w-",
-	"3": "-wx",
-	"4": "r--",
-	"5": "r-x",
-	"6": "rw-",
-	"7": "rwx",
+var modes = map[rune]string{
+	'0': "---",
+	'1': "--x",
+	'2': "-w-",
+	'3': "-wx",
+	'4': "r--",
+	'5': "r-x",
+	'6': "rw-",
+	'7': "rwx",
 }
 
 // NumParser
 func (p numParser) Parse(arg string) (string, error) {
 	builder := strings.Builder{}
 
-	if p.specialMode != 0 {
-		builder.WriteString("Special Modes:\n")
-		//TODO implement special modes
+	for _, r := range p.mode {
+		builder.WriteString(modes[rune(r)])
 	}
-
 	return builder.String(), nil
 }
 
 func (p numParser) ParseVerbose(arg string) (string, error) {
+	builder := strings.Builder{}
+	if p.specialMode != 0 {
+		builder.WriteString("Special Modes:\n")
+		//TODO implement special modes
+	}
 	return "", nil
 }
 
@@ -72,11 +75,11 @@ func (p CharParser) ParseVerbose(arg string) (string, error) {
 }
 
 // Given rwx as val, will return 7 as k
-func reverseMap(m map[string]string, val string) (string, error) {
+func reverseMap(m map[rune]string, val string) (rune, error) {
 	for k, v := range m {
 		if val == v {
 			return k, nil
 		}
 	}
-	return "", errors.New("Invalid argument")
+	return 0, errors.New("Invalid argument")
 }
