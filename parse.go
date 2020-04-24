@@ -29,7 +29,20 @@ func parse(ctx *cli.Context) error {
 		return errors.New("Invalid argument")
 	}
 
-	fmt.Println(parser.Parse(arg))
+	var parsed string
+	var err error
+
+	if ctx.Bool("l") {
+		parsed, err = parser.ParseVerbose(arg)
+	} else {
+		parsed, err = parser.Parse(arg)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(parsed)
 
 	return nil
 }

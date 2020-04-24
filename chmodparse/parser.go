@@ -43,7 +43,7 @@ var modes = map[rune]string{
 // NumParser
 func (p numParser) Parse(arg string) (string, error) {
 	builder := strings.Builder{}
-
+	// TODO special modes
 	for _, r := range p.mode {
 		builder.WriteString(modes[rune(r)])
 	}
@@ -55,8 +55,28 @@ func (p numParser) ParseVerbose(arg string) (string, error) {
 	if p.specialMode != 0 {
 		builder.WriteString("Special Modes:\n")
 		//TODO implement special modes
+		arg = arg[1:]
 	}
-	return "", nil
+
+	// User modes
+	builder.WriteString("\nUser Modes:\n")
+	m := modes[rune(arg[0])]
+	builder.WriteString(m + "\n")
+	longMode(m, &builder)
+
+	// Group modes
+	builder.WriteString("\nGroup Modes:\n")
+	m = modes[rune(arg[1])]
+	builder.WriteString(m + "\n")
+	longMode(m, &builder)
+
+	//Other modes
+	builder.WriteString("\nOther Modes:\n")
+	m = modes[rune(arg[2])]
+	builder.WriteString(m + "\n")
+	longMode(m, &builder)
+
+	return builder.String(), nil
 }
 
 // CharParser
@@ -71,6 +91,7 @@ func (p CharParser) Parse(arg string) (string, error) {
 }
 
 func (p CharParser) ParseVerbose(arg string) (string, error) {
+	//TODO
 	return "", nil
 }
 
@@ -82,4 +103,18 @@ func reverseMap(m map[rune]string, val string) (rune, error) {
 		}
 	}
 	return 0, errors.New("Invalid argument")
+}
+
+// Given rw-, add Read, Write to builder
+func longMode(m string, b *strings.Builder) {
+	for _, s := range m {
+		switch s {
+		case 'r':
+			b.WriteString("Read\n")
+		case 'w':
+			b.WriteString("Write\n")
+		case 'x':
+			b.WriteString("Execute\n")
+		}
+	}
 }
