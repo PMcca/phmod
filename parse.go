@@ -9,8 +9,8 @@ import (
 	"github.com/urfave/cli"
 )
 
-var regexNum = regexp.MustCompile("^[0-7]?[0-7]{3}$") // 3 or 4 digits
-var regexChar = regexp.MustCompile("^a$")             //TODO
+var regexNum = regexp.MustCompile("^[1-7]?[0-7]{3}$") // 3 or 4 digits
+var regexChar = regexp.MustCompile("^(?:r|-)(?:w|-)(?:x|-).{6}$")
 
 var parser chmodparse.Parser
 
@@ -30,16 +30,11 @@ func parse(ctx *cli.Context) error {
 	}
 
 	var parsed string
-	var err error
 
 	if ctx.Bool("l") {
-		parsed, err = parser.ParseVerbose(arg)
+		parsed = parser.ParseVerbose(arg)
 	} else {
-		parsed, err = parser.Parse(arg)
-	}
-
-	if err != nil {
-		return err
+		parsed = parser.Parse(arg)
 	}
 
 	fmt.Println(parsed)

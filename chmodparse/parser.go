@@ -1,14 +1,13 @@
 package chmodparse
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 )
 
 type Parser interface {
-	Parse(arg string) (string, error)
-	ParseVerbose(arg string) (string, error)
+	Parse(arg string) string
+	ParseVerbose(arg string) string
 }
 
 type numParser struct {
@@ -41,16 +40,16 @@ var modes = map[rune]string{
 }
 
 // NumParser
-func (p numParser) Parse(arg string) (string, error) {
+func (p numParser) Parse(arg string) string {
 	builder := strings.Builder{}
 	// TODO special modes
 	for _, r := range p.mode {
 		builder.WriteString(modes[rune(r)])
 	}
-	return builder.String(), nil
+	return builder.String()
 }
 
-func (p numParser) ParseVerbose(arg string) (string, error) {
+func (p numParser) ParseVerbose(arg string) string {
 	builder := strings.Builder{}
 	if p.specialMode != 0 {
 		builder.WriteString("Special Modes:\n")
@@ -76,33 +75,49 @@ func (p numParser) ParseVerbose(arg string) (string, error) {
 	builder.WriteString(m + "\n")
 	longMode(m, &builder)
 
-	return builder.String(), nil
+	return builder.String()
 }
 
 // CharParser
-func (p CharParser) Parse(arg string) (string, error) {
-	a, err := reverseMap(modes, arg)
-	if err != nil {
-		return "", err
-	}
-	fmt.Printf("Given %s, we get %s", arg, a)
+func (p CharParser) Parse(arg string) string {
+	builder := strings.Builder{}
+	for i := 0; i < 9; i += 3 {
+		subarg := arg[i : i+3] // one block of rwx
 
-	return "IMPLEMENT CHARPARSER", nil
+		a := reverseMap(modes, subarg)
+		builder.WriteRune(a)
+	}
+
+	return builder.String()
 }
 
-func (p CharParser) ParseVerbose(arg string) (string, error) {
-	//TODO
-	return "", nil
+func (p CharParser) ParseVerbose(arg string) string {
+	builder := strings.Builder{}
+
+	builder.WriteString("\nUser Modes:\n")
+	mode := reverseMap(modes, arg[0:3])
+	builder.WriteString(fmt.Sprintf("RWX\n%03b = %c\n", int(mode-'0'), mode)) // mode - '0' = character, not Unicode point
+
+	builder.WriteString("\nGroup Modes:\n")
+	mode = reverseMap(modes, arg[3:6])
+	builder.WriteString(fmt.Sprintf("RWX\n%03b = %c\n", int(mode-'0'), mode)) // mode - '0' = character, not Unicode point
+
+	builder.WriteString("\nOther Modes:\n")
+	mode = reverseMap(modes, arg[6:9])
+	builder.WriteString(fmt.Sprintf("RWX\n%03b = %c\n", int(mode-'0'), mode)) // mode - '0' = character, not Unicode point
+
+	return builder.String()
 }
 
 // Given rwx as val, will return 7 as k
-func reverseMap(m map[rune]string, val string) (rune, error) {
+func reverseMap(m map[rune]string, val string) rune {
 	for k, v := range m {
 		if val == v {
-			return k, nil
+			return k
 		}
 	}
-	return 0, errors.New("Invalid argument")
+
+	return 0
 }
 
 // Given rw-, add Read, Write to builder
@@ -118,3 +133,11 @@ func longMode(m string, b *strings.Builder) {
 		}
 	}
 }
+
+/*
+User:
+RWX
+101 = 5
+
+
+*/
