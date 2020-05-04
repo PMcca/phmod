@@ -14,6 +14,13 @@ Options:
 --help, -h     show help
 --version, -v  print the version
 ```
+**NOTE**
+To give an input such as `--xrwxrwx` (that is, the argument starting with `-`), precede the argument with `--`. e.g.
+
+`phmod -- --xrwxrwx`
+
+Output: `177`
+
 ### Example 
 `phmod 571`
 Output: `r-xrwx--x`
