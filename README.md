@@ -3,7 +3,7 @@
 phmod is a simple translator for `chmod` written in Go (1.14). Given an octal (771) or symbolic (rwxr-x--x) representation of a chmod input, phmod will produce its opposite with the option of some explanation using the `-l` flag.
 
 ## Install
-Run `GO111MODULE=on go get github.com/PMcca/phmod` to install the package to your $GOPATH/bin directory. Assuming your $PATH is set up to include your $GOPATH bin directory, the program should be ready to run upon restarting your terminal (`source ~/.bashrc` usually)
+Run `GO111MODULE=on go get github.com/PMcca/phmod` to install the package to your $GOPATH/bin directory. Next run `ln -s $GOPATH/bin/phmod /usr/local/bin/phmod` to run it via your $PATH.
 
 ## Usage
 ```
